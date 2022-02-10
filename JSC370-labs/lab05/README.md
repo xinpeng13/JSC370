@@ -1,10 +1,3 @@
----
-title: "Lab 05 - Data Wrangling"
-output:
-  html_document:
-    html_preview: false
-link-citations: yes
----
 
 # Learning goals
 
@@ -119,21 +112,12 @@ stations <- stations[n == 1,][, n := NULL]
 Across all weather stations, what is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
 
 ```{r}
-met <- data.table::fread("met_all.gz")
-met <- merge(x = met, y = stations, all.x = T, all.y = F, by.x = "USAFID", by.y = "USAF")
 ```
 
 ```{r}
-station_ave <- met[, .(temp = mean(temp, na.rm = T),
-                       wind.sp = mean(wind.sp, na.rm = T),
-                       atm.press = mean(atm.press, na.rm = T)),
-                   by = .(USAFID, STATE)]
 ```
 
 ```{r}
-medians <- station_ave[, .(temp_50 = quantile(temp, probs = .5, na.rm = T),
-                           wind.sp_50 = quantile(wind.sp, probs = .5, na.rm = T),
-                           atm.press_50 = quantile(atm.press, probs = .5, na.rm = T))]
 ```
 
 
@@ -144,15 +128,6 @@ Knit the document, commit your changes, and save it on GitHub. Don't forget to a
 Just like the previous question, you are asked to identify what is the most representative, the median, station per state. This time, instead of looking at one variable at a time, look at the euclidean distance. If multiple stations show in the median, select the one located at the lowest latitude.
 
 ```{r}
-station_ave[, temp_dist := abs(temp - medians$temp_50)]
-median_temp_station <- station_ave[order(temp_dist)][1]
-
-station_ave[, wind.sp_dist := abs(wind.sp - medians$wind.sp_50)]
-median_wind.sp_station <- station_ave[order(wind.sp_dist)][1]
-
-station_ave[, atm.press_dist := abs(atm.press - medians$atm.press_50)]
-median_atm.press_station <- station_ave[order(atm.press_dist)][1]
-
 ```
 
 Knit the doc and save it on GitHub.

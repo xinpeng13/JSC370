@@ -89,9 +89,10 @@ Once you are done setting up the project, you can now start working with the MET
 
 2.  Load the met data from <https://github.com/JSC370/jsc370-2022/blob/main/labs/lab03/met_all.gz>, and also the station data. For the latter, you can use the code we used during lecture to pre-process the stations data:
 
-```{r stations-data, eval = FALSE}
+```{r stations-data, eval =T}
 library(data.table)
 # Download the data
+
 stations <- fread("ftp://ftp.ncdc.noaa.gov/pub/data/noaa/isd-history.csv")
 stations[, USAF := as.integer(USAF)]
 
@@ -118,8 +119,10 @@ stations <- stations[n == 1,][, n := NULL]
 Across all weather stations, what is the median station in terms of temperature, wind speed, and atmospheric pressure? Look for the three weather stations that best represent continental US using the `quantile()` function. Do these three coincide?
 
 ```{r}
-
+met <- data.table::fread("met_all.gz")
+met <- merge(x = met, y = stations, all.x = T, all.y = F, by.x = "USAFID", by.y = "USAF")
 ```
+
 
 Knit the document, commit your changes, and save it on GitHub. Don't forget to add `README.md` to the tree, the first time you render it.
 

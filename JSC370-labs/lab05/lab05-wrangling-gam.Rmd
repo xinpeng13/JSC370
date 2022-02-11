@@ -242,8 +242,26 @@ station_ave[, temp_50 := quantile(temp, probs = .5, na.rm = T), by = STATE]
 station_ave[, wind.sp_50 := quantile(wind.sp, probs = .5, na.rm = T), by = STATE]
 
 library(ggplot2)
-ggplot(station_ave, aes(x=wind.sp_50, y=temp_50)) + geom_point() + geom_smooth(method = "lm")
+library(mgcv)
+
+ggplot(station_ave, aes(x=wind.sp_50, y=temp_50)) + geom_point() + geom_smooth(method = "lm") + geom_smooth(method = "gam")
 ```
+
+```{r}
+lm_mod <- lm(temp_50 ~ wind.sp_50, data = station_ave)
+summary(lm_mod)
+plot(lm_mod)
+```
+
+
+```{r}
+gm_mod <- gam(temp_50 ~ s(wind.sp_50, bs = "cr", k = 20), data = station_ave)
+summary(gm_mod)
+plot(gm_mod)
+```
+The secomd model is a better model, because from the adj R squared in the summary of the first plot, it is significantly small, which means the linear model does not explains the variability of the data.  
+
+
 
 # Delivarables
 
